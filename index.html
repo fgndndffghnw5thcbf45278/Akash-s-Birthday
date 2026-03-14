@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Bondu</title>
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: url("bg.jpg");
+    background-size: cover;
+    background-position: center;
+    font-family: 'Georgia', serif;
+    overflow:hidden;
+}
+
+@keyframes fog{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+}
+
+/* Main Text */
+
+h1{
+    color:#ff1a1a;
+    font-size:60px;
+    text-align:center;
+    text-shadow:
+    0 0 10px #ff0000,
+    0 0 20px #ff0000,
+    0 0 40px #990000;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+    from{
+        text-shadow:
+        0 0 10px #ff0000,
+        0 0 20px #ff0000,
+        0 0 40px #990000;
+    }
+    to{
+        text-shadow:
+        0 0 20px #ff3333,
+        0 0 40px #ff0000,
+        0 0 60px #660000;
+    }
+}
+
+/* ── Music Toggle Button ── */
+#music-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b0000, #ff1a1a);
+    border: 2px solid #ff1a1a;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff000088, 0 0 30px #99000066;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #fff;
+    transition: transform 0.2s;
+    animation: pulse-blood 2s infinite;
+}
+#music-btn:hover {
+    transform: scale(1.12);
+}
+@keyframes pulse-blood {
+    0%, 100% { box-shadow: 0 0 15px #ff000088, 0 0 30px #99000066; }
+    50%       { box-shadow: 0 0 30px #ff0000cc, 0 0 60px #990000aa; }
+}
+#music-btn.playing span {
+    display: inline-block;
+    animation: spin-note 1.2s linear infinite;
+}
+@keyframes spin-note {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ══ AUDIO ══ -->
+<audio id="bg-music" loop>
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ══ Music Button ══ -->
+<button id="music-btn" title="Play / Pause Music">
+    <span>🎵</span>
+</button>
+
+<h1> happy Birthday My Best Friend <br> Akash H.R.<br> 🩸</h1>
+
+<script>
+    const audio    = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-btn');
+    const icon     = musicBtn.querySelector('span');
+
+    audio.volume = 0.7;
+
+    // Try autoplay immediately
+    audio.play().then(() => {
+        musicBtn.classList.add('playing');
+        icon.textContent = '⏸';
+    }).catch(() => {
+        // Browser blocked autoplay — start on first user interaction
+        const startOnInteraction = () => {
+            audio.play().then(() => {
+                musicBtn.classList.add('playing');
+                icon.textContent = '⏸';
+            });
+            document.removeEventListener('click',   startOnInteraction);
+            document.removeEventListener('keydown', startOnInteraction);
+        };
+        document.addEventListener('click',   startOnInteraction);
+        document.addEventListener('keydown', startOnInteraction);
+    });
+
+    // Toggle play / pause
+    musicBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (audio.paused) {
+            audio.play();
+            musicBtn.classList.add('playing');
+            icon.textContent = '⏸';
+        } else {
+            audio.pause();
+            musicBtn.classList.remove('playing');
+            icon.textContent = '🎵';
+        }
+    });
+</script>
+
+</body>
+</html>
